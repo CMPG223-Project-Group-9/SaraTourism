@@ -1,0 +1,29 @@
+﻿@model System.Collections.Generic.List<SaraTourism.Models.TourGuide>
+@{ ViewBag.Title = "Tour guides";
+                ViewBag.CurrentNav = "tourguides"; }
+<div class="admin-toolbar">
+    <h1 style="margin-bottom:0;">Tour guides</h1>
+    <a href="@Url.Action("Create")" class="btn-solid" style="text-decoration:none;">+ Add tour guide</a>
+</div>
+<table class="admin-table">
+    <tr><th>Name</th><th>Specialization</th><th></th></tr>
+    @foreach (var g in Model)
+    {
+<tr>
+    <td>@g.Name</td>
+    <td>@g.Specialization</td>
+    <td>
+        <a class="icon-btn" href="@Url.Action("Edit", new { id = g.TourGuideID })">Edit</a>
+        @using (Html.BeginForm("Delete", "TourGuide", new { id = g.TourGuideID }, FormMethod.Post, new { style = "display:inline;" }))
+        {
+@Html.AntiForgeryToken()
+                    <button type="submit" class="icon-btn danger" style="background:none;border:none;cursor:pointer;" onclick="return confirm('Remove this tour guide?');">Remove</button>                }
+    </td>
+</tr>}
+    @if (Model.Count == 0)
+    {
+<tr><td colspan="3" style="color:var(--muted);text-align:center;">No tour guides yet.</td></tr>}
+</table>
+<div class="annot-note">
+    Availability per date/time slot is calculated automatically from existing bookings (see sp_TourGuide_GetAvailable) rather than stored here - a guide with no overlapping Confirmed/Completed booking on a given date is considered available.
+</div>

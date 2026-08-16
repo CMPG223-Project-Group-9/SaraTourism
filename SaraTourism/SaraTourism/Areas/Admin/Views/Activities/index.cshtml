@@ -1,0 +1,40 @@
+﻿@model System.Collections.Generic.List<SaraTourism.Models.Activity>
+@{ ViewBag.Title = "Activities";
+                ViewBag.CurrentNav = "activities"; }
+<div class="admin-toolbar">
+    <h1 style="margin-bottom:0;">Activities</h1>
+    <a href="@Url.Action("Create")" class="btn-solid" style="text-decoration:none;">+ Add activity</a>
+</div>
+@using (Html.BeginForm("Index", "Activity", FormMethod.Get))
+{
+<div class="filters-row">
+    <select name="sort" onchange="this.form.submit()">
+        <option value="" selected="@(ViewBag.Sort == null)">Sort by: Popularity</option>
+        <option value="price" selected="@(ViewBag.Sort == "price")">Price: low to high</option>
+        <option value="name" selected="@(ViewBag.Sort == "name")">Name</option>
+    </select>
+</div>}
+<table class="admin-table">
+    <tr><th>Activity</th><th>Location</th><th>Price pp</th><th>Popularity</th><th></th></tr>
+    @{ var maxBooked = Model.Count > 0 ? Model[0].TimesBooked : 0;
+                    if (maxBooked == 0) maxBooked = 1; }
+    @foreach (var a in Model)
+    {
+        var pct = (int)(100.0 * a.TimesBooked / maxBooked);
+<tr>
+    <td>@a.ActivityName</td>
+    <td>@a.Location</td>
+    <td>R @a.PricePerPerson.ToString("N0")</td>
+    <td><span class="popularity-bar"><span style="width:@(pct)%;"></span></span>@a.TimesBooked booking(s)</td>
+    <td>
+        <a class="icon-btn" href="@Url.Action("Edit", new { id = a.ActivityID })">Edit</a>
+        @using (Html.BeginForm("Delete", "Activity", new { id = a.ActivityID }, FormMethod.Post, new { style = "display:inline;" }))
+        {
+@Html.AntiForgeryToken()
+                    <button type="submit" class="icon-btn danger" style="background:none;border:none;cursor:pointer;" onclick="return confirm('Remove this activity?');">Remove</button>                }
+    </td>
+</tr>}
+    @if (Model.Count == 0)
+    {
+<tr><td colspan="5" style="color:var(--muted);text-align:center;">No activities yet.</td></tr>}
+</table>

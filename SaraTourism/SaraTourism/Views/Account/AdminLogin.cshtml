@@ -1,0 +1,52 @@
+﻿@model SaraTourism.Models.ViewModels.AdminLoginViewModel
+@{ ViewBag.Title = "Admin log in";
+                Layout = null; }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Admin log in - SARA Tourism</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @Styles.Render("~/Content/css")
+</head>
+<body>
+    <div class="auth-shell">
+        <div class="auth-side">
+            <div class="sun"></div>
+            <div class="brand"><div class="mark"></div>SARA Admin</div>
+            <blockquote>
+                "Manage bookings, guides and activities from one place."
+                <div class="quote-by">&mdash; SARA Tourism</div>
+            </blockquote>
+        </div>
+        <div class="auth-form-side">
+            <div class="auth-card">
+                <h1>Admin log in</h1>
+                <p class="sub">For SARA Tourism staff only.</p>
+
+                @using (Html.BeginForm("AdminLogin", "Account", FormMethod.Post))
+                {
+    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(false, "", new { @class = "validation-summary-errors" })
+
+                                    <div class="field">
+                                        @Html.LabelFor(m => m.Email)
+                                        @Html.TextBoxFor(m => m.Email, new { placeholder = "admin@saratourism.co.za", type = "email" })
+                                        @Html.ValidationMessageFor(m => m.Email)
+                                    </div>
+                                                    <div class="field">
+                                                        @Html.LabelFor(m => m.Password)
+                                                        @Html.PasswordFor(m => m.Password)
+                                                        @Html.ValidationMessageFor(m => m.Password)
+                                                    </div>
+                                                                    <button type="submit" class="primary-btn" style="margin-top:6px;">Log in</button>}
+                <div class="auth-foot"><a href="@Url.Action("Login")" style="color:var(--muted);">Tourist log in instead</a></div>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+</body>
+</html>

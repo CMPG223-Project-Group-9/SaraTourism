@@ -1,0 +1,40 @@
+﻿@model System.Collections.Generic.List<SaraTourism.Models.Activity>
+@{ ViewBag.Title = "Activities";
+                ViewBag.CurrentNav = "activities"; }
+<div class="wrap">
+    <div class="page-title-row">
+        <h1>All activities</h1>
+        <span>@Model.Count activities available</span>
+    </div>
+    @using (Html.BeginForm("Index", "Activity", FormMethod.Get))
+    {
+<div class="filter-bar">
+    @Html.TextBox("q", ViewBag.Query as string, new { placeholder = "Search activities, e.g. Kruger safari" })
+    <button type="submit" class="search-btn">Search</button>
+</div>}
+    <div class="activities-grid" style="padding-bottom:56px;">
+        @{ var thumbClasses = new[] { "a", "b", "c" }; }
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var activity = Model[i];
+<div class="act-card">
+    @if (!string.IsNullOrEmpty(activity.ImagePath))
+    {
+<div class="thumb @thumbClasses[i % 3] arch-sm"><img src="@Url.Content(activity.ImagePath)" class="activity-thumb-real" alt="@activity.ActivityName" /></div> }
+                else
+                {
+<div class="thumb @thumbClasses[i % 3] arch-sm"></div>                }
+    <div class="body">
+        <h3 style="margin-top:10px;">@activity.ActivityName</h3>
+        <div class="meta">@activity.Location &middot; @activity.DurationDisplay &middot; up to @activity.MaxCapacity people</div>
+        <div class="price-row">
+            <span class="price">R @activity.PricePerPerson.ToString("N0") <small style="font-weight:400;color:var(--muted);">pp</small></span>
+            <a class="view" href="@Url.Action("Details", "Activity", new { id = activity.ActivityID })">View &rarr;</a>
+        </div>
+    </div>
+</div>}
+        @if (Model.Count == 0)
+        {
+<p style="color:var(--muted);">No activities match your search.</p>}
+    </div>
+</div>

@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - SARA Tourism</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @Styles.Render("~/Content/css")
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <div class="topbar">
+        <a href="@Url.Action("Index", "Home")" class="brand" style="text-decoration:none;">
+            <div class="mark"></div>SARA Tourism
+        </a>
+        @if (Session["TouristID"] != null)
+        {
+<div class="site-nav">
+    <a href="@Url.Action("Index", "Activity")" class="@(ViewBag.CurrentNav == "activities" ? "current" : "")">Activities</a>
+    <a href="@Url.Action("MyBookings", "Booking")" class="@(ViewBag.CurrentNav == "mybookings" ? "current" : "")">My bookings</a>
+</div>
+                <a href="@Url.Action("Profile", "Account")" class="cta-pill">@Session["TouristName"]</a> }
+                            else
+                            {
+                <div class="site-nav">
+                    <a href="@Url.Action("Index", "Home")">Activities</a>
+                    <a href="@Url.Action("Login", "Account")">Log in</a>
+                </div>
+                                <a href="@Url.Action("Register", "Account")" class="cta-pill">Register</a>}
+    </div>
+
+    <div class="wrap" style="padding-top:0;">
+        @if (TempData["BookingSuccess"] != null)
+        {
+<div class="alert-success" style="margin:20px 48px 0;">@TempData["BookingSuccess"]</div>}
+        @if (TempData["RegisterSuccess"] != null)
+        {
+<div class="alert-success" style="margin:20px 48px 0;">@TempData["RegisterSuccess"]</div>}
+        @if (TempData["ProfileSuccess"] != null)
+        {
+<div class="alert-success" style="margin:20px 48px 0;">@TempData["ProfileSuccess"]</div>}
+        @if (TempData["ReviewSuccess"] != null)
+        {
+<div class="alert-success" style="margin:20px 48px 0;">@TempData["ReviewSuccess"]</div>}
+        @if (TempData["ReviewError"] != null)
+        {
+<div class="alert-error" style="margin:20px 48px 0;">@TempData["ReviewError"]</div>}
+    </div>
+
+    @RenderBody()
+
+    <div class="footer">
+        <div class="wrap">
+            <div><strong style="color:#fff;">SARA Tourism</strong><br />Promoting Limpopo, one journey at a time.</div>
+            <div>&copy; @DateTime.Now.Year SARA Tourism</div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/site")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - SARA Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @Styles.Render("~/Content/css")
+</head>
+<body>
+    <div class="admin-shell">
+        <div class="admin-sidebar">
+            <div class="brand"><div class="mark"></div>SARA Admin</div>
+            <a href="@Url.Action("Index", "Booking", new { area = "Admin" })" class="@(ViewBag.CurrentNav == "bookings" ? "current" : "")">Bookings</a>
+            <a href="@Url.Action("Index", "Activity", new { area = "Admin" })" class="@(ViewBag.CurrentNav == "activities" ? "current" : "")">Activities</a>
+            <a href="@Url.Action("Index", "TourGuide", new { area = "Admin" })" class="@(ViewBag.CurrentNav == "tourguides" ? "current" : "")">Tour guides</a>
+            <a href="@Url.Action("Index", "Tourist", new { area = "Admin" })" class="@(ViewBag.CurrentNav == "tourists" ? "current" : "")">Tourists</a>
+            <a href="@Url.Action("Index", "Report", new { area = "Admin" })" class="@(ViewBag.CurrentNav == "reports" ? "current" : "")">Reports</a>
+            <a href="@Url.Action("AdminLogout", "Account")" style="margin-top:24px;color:#a89b86;">Log out</a>
+        </div>
+        <div class="admin-main">
+            @if (TempData["BookingActionSuccess"] != null)
+            {
+<div class="alert-success">@TempData["BookingActionSuccess"]</div>            }
+            @if (TempData["ActivitySuccess"] != null)
+            {
+<div class="alert-success">@TempData["ActivitySuccess"]</div>            }
+            @if (TempData["GuideSuccess"] != null)
+            {
+<div class="alert-success">@TempData["GuideSuccess"]</div>            }
+            @if (TempData["TouristSuccess"] != null)
+            {
+<div class="alert-success">@TempData["TouristSuccess"]</div>            }
+            @RenderBody()
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/site")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

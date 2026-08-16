@@ -1,0 +1,32 @@
+﻿@model SaraTourism.Models.ViewModels.AllocateGuideViewModel
+@{ ViewBag.Title = "Allocate guide";
+                ViewBag.CurrentNav = "bookings"; }
+<h1>Bookings</h1>
+<div class="allocate-card">
+    <h2>Allocate guide - booking #@Model.BookingID</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">
+        @Model.Booking.ActivityName &middot; @Model.Booking.BookingDate.ToString("dd MMM yyyy") &middot; @Model.Booking.TouristName @Model.Booking.TouristSurname
+    </p>
+
+    @if (Model.AvailableGuides.Count == 0)
+    {
+<div class="alert-error">No guides are available for this date and time slot.</div> }
+            else
+            {
+                using (Html.BeginForm("Allocate", "Booking", FormMethod.Post))
+                {
+@Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.BookingID)
+                                        <div class="field">
+                                            <label>Available guides for this time slot</label>
+                                            <select name="SelectedTourGuideID">
+                                                @foreach (var g in Model.AvailableGuides)
+                                                {
+                            <option value="@g.TourGuideID">@g.Name - @g.Specialization</option>                    }
+                                            </select>
+                                        </div>
+                                                            <div class="annot-note">Guides already booked in this time slot never appear in this list, so double-booking is structurally impossible.</div>
+                                                                                <button type="submit" class="primary-btn">Confirm allocation</button>}
+                                                                                            }
+    <div style="margin-top:14px;"><a href="@Url.Action("Index")" style="color:var(--muted);font-size:13px;">&larr; Back to bookings</a></div>
+</div>

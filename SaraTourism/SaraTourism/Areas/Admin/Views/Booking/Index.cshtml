@@ -1,0 +1,63 @@
+﻿@model System.Collections.Generic.List<SaraTourism.Models.Booking>
+@{ ViewBag.Title = "Bookings";
+                ViewBag.CurrentNav = "bookings"; }
+<h1>Bookings</h1>
+@using (Html.BeginForm("Index", "Booking", FormMethod.Get))
+{
+<div class="filters-row">
+    <select name="status" onchange="this.form.submit()">
+        <option value="">All statuses</option>
+        <option value="Pending" selected="@(ViewBag.StatusFilter == "Pending")">Pending</option>
+        <option value="Confirmed" selected="@(ViewBag.StatusFilter == "Confirmed")">Confirmed</option>
+        <option value="Completed" selected="@(ViewBag.StatusFilter == "Completed")">Completed</option>
+        <option value="Cancelled" selected="@(ViewBag.StatusFilter == "Cancelled")">Cancelled</option>
+    </select>
+</div>}
+<table class="admin-table">
+    <tr><th>Tourist</th><th>Activity</th><th>Date</th><th>Status</th><th>Guide</th><th>Actions</th></tr>
+    @foreach (var b in Model)
+    {
+        var pillStyle = "";
+        switch (b.BookingStatus)
+        {
+            case SaraTourism.Models.BookingStatus.Confirmed: pillStyle = "background:#e0ecff;color:#2c4f8a;"; break;
+            case SaraTourism.Models.BookingStatus.Completed: pillStyle = "background:#e9e3d7;color:#6b6255;"; break;
+            case SaraTourism.Models.BookingStatus.Cancelled: pillStyle = "background:#f4d9d9;color:#8a2c2c;"; break;
+            default: pillStyle = "background:#faf1d6;color:#8a6a1f;"; break;
+        }
+<tr>
+    <td>@b.TouristName @b.TouristSurname</td>
+    <td>@b.ActivityName</td>
+    <td>@b.BookingDate.ToString("dd MMM")</td>
+    <td><span class="pill" style="@pillStyle">@b.StatusLabel</span></td>
+    <td style="color:var(--muted);">@(string.IsNullOrEmpty(b.GuideName) ? "Unassigned" : b.GuideName)</td>
+    <td>
+        @if (b.BookingStatus == SaraTourism.Models.BookingStatus.Pending)
+        {
+<a class="icon-btn" href="@Url.Action("Allocate", new { id = b.BookingID })">Allocate guide</a> }
+                else if (b.BookingStatus == SaraTourism.Models.BookingStatus.Confirmed)
+                {
+                    using (Html.BeginForm("ConfirmArrival", "Booking", new { id = b.BookingID }, FormMethod.Post, new { style = "display:inline;" }))
+                    {
+@Html.AntiForgeryToken()
+                        <button type="submit" class="icon-btn" style="background:none;border:none;cursor:pointer;">Confirm arrival</button> }
+                                            using (Html.BeginForm("Cancel", "Booking", new { id = b.BookingID }, FormMethod.Post, new { style = "display:inline;" }))
+                                            {
+                        @Html.AntiForgeryToken()
+                                                <button type="submit" class="icon-btn danger" style="background:none;border:none;cursor:pointer;" onclick="return confirm('Cancel this booking?');">Cancel</button> }
+                                                                }
+                                                                else if (b.BookingStatus == SaraTourism.Models.BookingStatus.Completed)
+                                                                {
+                                                <span style="color:var(--muted);font-size:12.5px;">&mdash;</span> }
+                                                                else
+                                                                {
+                                                <span style="color:var(--muted);font-size:12.5px;">No-show</span>                }
+    </td>
+</tr>}
+    @if (Model.Count == 0)
+    {
+<tr><td colspan="6" style="color:var(--muted);text-align:center;">No bookings found.</td></tr>}
+</table>
+<div class="annot-note">
+    Pending &rarr; admin allocates a guide &rarr; Confirmed. On the day, admin clicks <strong>Confirm arrival</strong> once the tourist has shown up, which marks the booking Completed and unlocks the Review button on the tourist's My Bookings page. If the tourist never shows up, admin clicks <strong>Cancel</strong> instead.
+</div>

@@ -1,0 +1,51 @@
+﻿@model System.Collections.Generic.List<SaraTourism.Models.Activity>
+@{ ViewBag.Title = "Home"; }
+<div class="wrap">
+    <div class="hero">
+        <div>
+            <div class="eyebrow">Limpopo, South Africa</div>
+            <h1>Sunrise safaris and <em>authentic</em> Limpopo adventures</h1>
+            <p>Book guided tours, hikes and cultural experiences across Limpopo - all in one place, confirmed instantly.</p>
+            @using (Html.BeginForm("Index", "Activity", FormMethod.Get))
+            {
+<div class="search-card">
+    @Html.TextBox("q", null, new { placeholder = "Search activities, e.g. Kruger safari" })
+    <div class="divider"></div>
+    <button type="submit" class="search-btn">Search</button>
+</div>            }
+        </div>
+        <div class="hero-image arch">
+            <div class="sun"></div>
+            <div class="cap">Kruger sunrise safari - departs 06:00 daily</div>
+        </div>
+    </div>
+</div>
+
+<div class="wrap section-pad">
+    <div class="section-head">
+        <h2>Popular activities</h2>
+        <a href="@Url.Action("Index", "Activity")">View all activities &rarr;</a>
+    </div>
+    <div class="activities-grid">
+        @{ var thumbClasses = new[] { "a", "b", "c" }; }
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var activity = Model[i];
+<div class="act-card">
+    @if (!string.IsNullOrEmpty(activity.ImagePath))
+    {
+<div class="thumb @thumbClasses[i % 3] arch-sm"><img src="@Url.Content(activity.ImagePath)" class="activity-thumb-real" alt="@activity.ActivityName" /></div> }
+                else
+                {
+<div class="thumb @thumbClasses[i % 3] arch-sm"></div>                }
+    <div class="body">
+        <h3 style="margin-top:10px;">@activity.ActivityName</h3>
+        <div class="meta">@activity.Location &middot; @activity.DurationDisplay &middot; up to @activity.MaxCapacity people</div>
+        <div class="price-row">
+            <span class="price">R @activity.PricePerPerson.ToString("N0") <small style="font-weight:400;color:var(--muted);">pp</small></span>
+            <a class="view" href="@Url.Action("Details", "Activity", new { id = activity.ActivityID })">View &rarr;</a>
+        </div>
+    </div>
+</div>}
+    </div>
+</div>

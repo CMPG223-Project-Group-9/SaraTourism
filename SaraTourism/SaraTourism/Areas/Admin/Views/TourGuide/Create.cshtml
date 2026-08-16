@@ -1,0 +1,32 @@
+﻿@model SaraTourism.Models.TourGuide
+@using System.Collections.Generic
+@using System.Web.Mvc
+@{ ViewBag.Title = "Add tour guide";
+                ViewBag.CurrentNav = "tourguides"; }
+<h1>Add tour guide</h1>
+<div class="allocate-card">
+    @using (Html.BeginForm("Create", "TourGuide", FormMethod.Post))
+    {
+@Html.AntiForgeryToken()
+                @Html.ValidationSummary(false, "", new { @class = "validation-summary-errors" })
+
+                                <div class="field">
+                                    @Html.LabelFor(m => m.Name)
+                                    @Html.TextBoxFor(m => m.Name, new { placeholder = "e.g. Thandiwe Nkosi" })
+                                    @Html.ValidationMessageFor(m => m.Name)
+                                </div>
+                                                <div class="field">
+                                                    @Html.LabelFor(m => m.Specialization)
+                                                    @Html.DropDownListFor(m => m.Specialization, new List<SelectListItem>
+                                                {
+                new SelectListItem { Text = "Wildlife tours", Value = "Wildlife tours" },
+                new SelectListItem { Text = "Cultural heritage tours", Value = "Cultural heritage tours" },
+                new SelectListItem { Text = "Adventure & hiking tours", Value = "Adventure & hiking tours" },
+                new SelectListItem { Text = "Scenic tours", Value = "Scenic tours" }
+            })
+                                                    @Html.ValidationMessageFor(m => m.Specialization)
+                                                </div>
+                                                                <button type="submit" class="primary-btn">Save tour guide</button>}
+    <div style="margin-top:14px;"><a href="@Url.Action("Index")" style="color:var(--muted);font-size:13px;">&larr; Back to tour guides</a></div>
+</div>
+@{ // Local using so DropDownListFor's SelectListItem resolves without adding a global namespace }

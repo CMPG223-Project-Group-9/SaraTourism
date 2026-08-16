@@ -1,0 +1,76 @@
+﻿@model SaraTourism.Models.ViewModels.RegisterViewModel
+@{ ViewBag.Title = "Register";
+                Layout = null; }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Register - SARA Tourism</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @Styles.Render("~/Content/css")
+</head>
+<body>
+    <div class="auth-shell">
+        <div class="auth-side">
+            <div class="sun"></div>
+            <div class="brand"><div class="mark"></div>SARA Tourism</div>
+            <blockquote>
+                "Watching the sun rise over the bushveld on my first Kruger safari is a memory I'll carry forever."
+                <div class="quote-by">&mdash; Recent SARA Tourism guest</div>
+            </blockquote>
+        </div>
+        <div class="auth-form-side">
+            <div class="auth-card">
+                <h1>Create your account</h1>
+                <p class="sub">Join SARA Tourism to book activities across Limpopo.</p>
+
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+                {
+    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(false, "", new { @class = "validation-summary-errors" })
+
+                                    <div class="row2">
+                                        <div class="field">
+                                            @Html.LabelFor(m => m.Name)
+                                            @Html.TextBoxFor(m => m.Name, new { placeholder = "Faith" })
+                                            @Html.ValidationMessageFor(m => m.Name)
+                                        </div>
+                                        <div class="field">
+                                            @Html.LabelFor(m => m.Surname)
+                                            @Html.TextBoxFor(m => m.Surname, new { placeholder = "Machaka" })
+                                            @Html.ValidationMessageFor(m => m.Surname)
+                                        </div>
+                                    </div>
+                                                    <div class="field">
+                                                        @Html.LabelFor(m => m.Email)
+                                                        @Html.TextBoxFor(m => m.Email, new { placeholder = "name@example.com", type = "email" })
+                                                        @Html.ValidationMessageFor(m => m.Email)
+                                                    </div>
+                                                                    <div class="row2">
+                                                                        <div class="field">
+                                                                            @Html.LabelFor(m => m.Password)
+                                                                            @Html.PasswordFor(m => m.Password)
+                                                                            @Html.ValidationMessageFor(m => m.Password)
+                                                                        </div>
+                                                                        <div class="field">
+                                                                            @Html.LabelFor(m => m.ConfirmPassword)
+                                                                            @Html.PasswordFor(m => m.ConfirmPassword)
+                                                                            @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                                                                        </div>
+                                                                    </div>
+                                                                                    <div class="field">
+                                                                                        @Html.LabelFor(m => m.DateOfBirth)
+                                                                                        @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { type = "date" })
+                                                                                        @Html.ValidationMessageFor(m => m.DateOfBirth)
+                                                                                    </div>
+                                                                                                    <button type="submit" class="primary-btn" style="margin-top:6px;">Create account</button>}
+                <div class="auth-foot">Already registered? <a href="@Url.Action("Login")">Log in</a></div>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+</body>
+</html>

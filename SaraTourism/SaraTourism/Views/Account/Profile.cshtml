@@ -1,0 +1,68 @@
+﻿@model SaraTourism.Models.ViewModels.ProfileViewModel
+@{ ViewBag.Title = "Profile"; }
+<div class="wrap profile-layout">
+    <div class="profile-card">
+        <div class="avatar"></div>
+        <h2>@Model.Name @Model.Surname</h2>
+        <div class="email">@Model.Email</div>
+        <div class="profile-stats">
+            <div><strong>@Model.TotalBookings</strong><span>Bookings</span></div>
+            <div><strong>@Model.CompletedBookings</strong><span>Completed</span></div>
+            <div><strong>@(Model.AverageRatingGiven.ToString("0.0"))</strong><span>Avg rating given</span></div>
+        </div>
+    </div>
+    <div class="form-card">
+        <h2>Personal details</h2>
+        @using (Html.BeginForm("Profile", "Account", FormMethod.Post))
+        {
+@Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.TouristID)
+                                @Html.ValidationSummary(false, "", new { @class = "validation-summary-errors" })
+
+                                                <div class="row2">
+                                                    <div class="field">
+                                                        @Html.LabelFor(m => m.Name)
+                                                        @Html.TextBoxFor(m => m.Name)
+                                                        @Html.ValidationMessageFor(m => m.Name)
+                                                    </div>
+                                                    <div class="field">
+                                                        @Html.LabelFor(m => m.Surname)
+                                                        @Html.TextBoxFor(m => m.Surname)
+                                                        @Html.ValidationMessageFor(m => m.Surname)
+                                                    </div>
+                                                </div>
+                                                                <div class="field">
+                                                                    @Html.LabelFor(m => m.Email)
+                                                                    @Html.TextBoxFor(m => m.Email, new { type = "email" })
+                                                                    @Html.ValidationMessageFor(m => m.Email)
+                                                                </div>
+                                                                                <div class="field">
+                                                                                    @Html.LabelFor(m => m.DateOfBirth)
+                                                                                    @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { type = "date" })
+                                                                                    @Html.ValidationMessageFor(m => m.DateOfBirth)
+                                                                                </div>
+                                                                                                <button type="submit" class="primary-btn" style="width:auto;padding:11px 22px;">Save changes</button>}
+
+        <h2 style="margin-top:26px;">Change password</h2>
+        @if (TempData["PasswordSuccess"] != null)
+        {
+<div class="alert-success">@TempData["PasswordSuccess"]</div>}
+        @if (TempData["PasswordError"] != null)
+        {
+<div class="alert-error">@TempData["PasswordError"]</div>}
+        @using (Html.BeginForm("ChangePassword", "Account", FormMethod.Post))
+        {
+@Html.AntiForgeryToken()
+                <div class="row2">
+                    <div class="field">
+                        <label>New password</label>
+                        <input type="password" name="NewPassword" />
+                    </div>
+                    <div class="field">
+                        <label>Confirm new password</label>
+                        <input type="password" name="ConfirmNewPassword" />
+                    </div>
+                </div>
+                                <button type="submit" class="btn-outline">Update password</button>}
+    </div>
+</div>

@@ -1,0 +1,91 @@
+﻿@model System.Collections.Generic.List<SaraTourism.Models.Booking>
+@{ ViewBag.Title = "My Bookings";
+                ViewBag.CurrentNav = "mybookings"; }
+<div class="wrap" style="padding:36px 48px 60px;">
+    <h1 style="font-size:26px;margin-bottom:20px;">My bookings</h1>
+
+    @if (Model.Count == 0)
+    {
+<p style="color:var(--muted);">You haven't made any bookings yet. <a href="@Url.Action("Index", "Activity")" style="color:var(--clay);">Browse activities &rarr;</a></p>}
+
+    @foreach (var booking in Model)
+    {
+        var pillClass = "pill";
+        var pillStyle = "";
+        switch (booking.BookingStatus)
+        {
+            case SaraTourism.Models.BookingStatus.Confirmed:
+                pillStyle = "background:#e0ecff;color:#2c4f8a;"; break;
+            case SaraTourism.Models.BookingStatus.Completed:
+                pillClass = "pill completed"; break;
+            case SaraTourism.Models.BookingStatus.Cancelled:
+                pillStyle = "background:#f4d9d9;color:#8a2c2c;"; break;
+            default:
+                pillStyle = "background:#faf1d6;color:#8a6a1f;"; break;
+        }
+        var rowStyle = booking.BookingStatus == SaraTourism.Models.BookingStatus.Cancelled ? "opacity:0.6;" : "";
+
+<div class="booking-row" style="@rowStyle">
+    <div class="info">
+        <div class="thumb-sm"></div>
+        <div>
+            <strong>@booking.ActivityName</strong>
+            <span>@booking.BookingDate.ToString("dd MMM yyyy") &middot; @booking.NumberOfPeople person(s)</span>
+        </div>
+    </div>
+    <span class="@pillClass" style="@pillStyle">@booking.StatusLabel</span>
+
+    @if (booking.BookingStatus == SaraTourism.Models.BookingStatus.Completed)
+    {
+<a class="link-btn" href="#" onclick="openReviewModal(@booking.BookingID); return false;">Leave a review</a> }
+                else
+                {
+<a class="link-btn" href="#" style="color:var(--muted);">View details</a>}
+</div>}
+</div>
+
+<!-- Review modal -->
+<div class="modal-backdrop-custom" id="reviewModalBackdrop">
+    <div class="modal-box">
+        <h2 style="font-size:17px;margin-bottom:14px;">Leave a review</h2>
+        @using (Html.BeginForm("SubmitReview", "Booking", FormMethod.Post, new { id = "reviewForm" }))
+        {
+@Html.AntiForgeryToken()
+                <input type="hidden" name="bookingId" id="reviewBookingId" value="" />
+                                <div class="star-rating" id="starRating">
+                                    <span class="star" data-value="1">&#9733;</span>
+                                    <span class="star" data-value="2">&#9733;</span>
+                                    <span class="star" data-value="3">&#9733;</span>
+                                    <span class="star" data-value="4">&#9733;</span>
+                                    <span class="star" data-value="5">&#9733;</span>
+                                </div>
+                                                <input type="hidden" name="rating" id="reviewRating" value="5" />
+                                                                <div class="field">
+                                                                    <label>Comment</label>
+                                                                    <textarea name="comment" rows="3" style="width:100%;border:1.5px solid #e4ddcd;border-radius:10px;padding:10px 12px;font-family:'Manrope';font-size:14px;"></textarea>
+                                                                </div>
+                                                                                <div style="display:flex;gap:8px;justify-content:flex-end;">
+                                                                                    <button type="button" class="btn-outline" onclick="closeReviewModal();">Cancel</button>
+                                                                                    <button type="submit" class="primary-btn" style="width:auto;padding:10px 20px;">Submit review</button>
+                                                                                </div>}
+    </div>
+</div>
+
+@section scripts {
+    <script>function openReviewModal(bookingId) {
+            document.getElementById('reviewBookingId').value = bookingId;
+            document.getElementById('reviewModalBackdrop').classList.add('open');
+        }
+        function closeReviewModal() {
+            document.getElementById('reviewModalBackdrop').classList.remove('open');
+        }
+        document.querySelectorAll('#starRating .star').forEach(function (star) {
+            star.addEventListener('click', function () {
+                var value = parseInt(this.dataset.value, 10);
+                document.getElementById('reviewRating').value = value;
+                document.querySelectorAll('#starRating .star').forEach(function (s) {
+                    s.classList.toggle('selected', parseInt(s.dataset.value, 10) <= value);
+                });
+            });
+        });</script>
+}

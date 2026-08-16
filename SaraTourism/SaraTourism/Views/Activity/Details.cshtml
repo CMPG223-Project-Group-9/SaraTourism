@@ -1,0 +1,50 @@
+﻿@model SaraTourism.Models.ViewModels.BookingCreateViewModel
+@{ ViewBag.Title = Model.Activity.ActivityName;
+                ViewBag.CurrentNav = "activities"; }
+<div class="wrap booking-layout">
+    <div class="detail-card">
+        @if (!string.IsNullOrEmpty(Model.Activity.ImagePath))
+        {
+<div class="detail-image arch"><img src="@Url.Content(Model.Activity.ImagePath)" class="activity-thumb-real" alt="@Model.Activity.ActivityName" /></div> }
+            else
+            {
+<div class="detail-image arch"></div>}
+        <h1>@Model.Activity.ActivityName</h1>
+        <div class="detail-meta">
+            <span>@Model.Activity.Location</span>
+            <span>@Model.Activity.DurationDisplay</span>
+            <span>Up to @Model.Activity.MaxCapacity people</span>
+        </div>
+        <p class="desc">@Model.Activity.Description</p>
+    </div>
+    <div class="booking-panel">
+        <h2>Book this activity</h2>
+        @using (Html.BeginForm("Book", "Activity", FormMethod.Post))
+        {
+@Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.ActivityID)
+                                @Html.ValidationSummary(false, "", new { @class = "validation-summary-errors" })
+
+                                                <div class="field">
+                                                    @Html.LabelFor(m => m.BookingDate)
+                                                    @Html.TextBoxFor(m => m.BookingDate, "{0:yyyy-MM-dd}", new { type = "date" })
+                                                    @Html.ValidationMessageFor(m => m.BookingDate)
+                                                    <div class="hint">Only future dates are selectable</div>
+                                                </div>
+                                                                <div class="field">
+                                                                    @Html.LabelFor(m => m.NumberOfPeople)
+                                                                    @Html.TextBoxFor(m => m.NumberOfPeople, new { type = "number", min = "1" })
+                                                                    @Html.ValidationMessageFor(m => m.NumberOfPeople)
+                                                                    <div class="hint">Maximum @Model.Activity.MaxCapacity people for this activity</div>
+                                                                </div>
+                                                                                <div class="field">
+                                                                                    @Html.LabelFor(m => m.ContactEmail)
+                                                                                    @Html.TextBoxFor(m => m.ContactEmail, new { type = "email", placeholder = "name@example.com" })
+                                                                                    @Html.ValidationMessageFor(m => m.ContactEmail)
+                                                                                </div>
+                                                                                                <div class="total-row">
+                                                                                                    <span>Price per person</span><strong>R @Model.Activity.PricePerPerson.ToString("N2")</strong>
+                                                                                                </div>
+                                                                                                                <button type="submit" class="primary-btn">Confirm booking</button>}
+    </div>
+</div>

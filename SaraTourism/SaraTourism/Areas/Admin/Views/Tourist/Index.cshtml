@@ -1,0 +1,40 @@
+﻿@model System.Collections.Generic.List<SaraTourism.Models.Tourist>
+@using System.Collections.Generic
+@{ ViewBag.Title = "Tourists";
+                ViewBag.CurrentNav = "tourists"; }
+@{ var bookingCounts = ViewBag.BookingCounts as Dictionary<int, int> ?? new Dictionary<int, int>(); }
+<div class="admin-toolbar">
+    <h1 style="margin-bottom:0;">Tourists</h1>
+</div>
+<table class="admin-table">
+    <tr><th>Name</th><th>Email</th><th>Registered</th><th>Bookings</th><th>Status</th><th></th></tr>
+    @foreach (var t in Model)
+    {
+        int count = bookingCounts.ContainsKey(t.TouristID) ? bookingCounts[t.TouristID] : 0;
+<tr>
+    <td>@t.FullName</td>
+    <td>@t.Email</td>
+    <td>@t.CreatedDate.ToString("dd MMM yyyy")</td>
+    <td>@count</td>
+    <td>
+        @if (t.IsActive)
+        {
+<span class="pill" style="background:#EAF0E7;color:#3E5C46;">Active</span> }
+                else
+                {
+<span class="pill" style="background:#e9e3d7;color:#6b6255;">Inactive</span>                }
+    </td>
+    <td>
+        @if (t.IsActive)
+        {
+            using (Html.BeginForm("Deactivate", "Tourist", new { id = t.TouristID }, FormMethod.Post, new { style = "display:inline;" }))
+            {
+@Html.AntiForgeryToken()
+                        <button type="submit" class="icon-btn danger" style="background:none;border:none;cursor:pointer;" onclick="return confirm('Deactivate this tourist account?');">Deactivate</button>                    }
+                                        }
+    </td>
+</tr>}
+    @if (Model.Count == 0)
+    {
+<tr><td colspan="6" style="color:var(--muted);text-align:center;">No tourists registered yet.</td></tr>}
+</table>

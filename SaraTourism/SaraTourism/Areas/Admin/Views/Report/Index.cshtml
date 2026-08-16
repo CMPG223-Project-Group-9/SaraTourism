@@ -1,0 +1,54 @@
+﻿@model SaraTourism.Models.ViewModels.ReportViewModel
+@{ ViewBag.Title = "Reports";
+                ViewBag.CurrentNav = "reports"; }
+<h1>Reports</h1>
+@using (Html.BeginForm("Index", "Report", FormMethod.Get))
+{
+<div class="filters-row">
+    <input type="date" name="start" value="@Model.StartDate.ToString("yyyy-MM-dd")" />
+    <input type="date" name="end" value="@Model.EndDate.ToString("yyyy-MM-dd")" />
+    <button type="submit" class="primary-btn" style="width:auto;padding:9px 20px;">Generate</button>
+</div>}
+
+<div class="stat-cards">
+    <div class="stat-card"><div class="num">@Model.TotalTours</div><div class="label">Total tours</div></div>
+    <div class="stat-card"><div class="num">@(Model.AverageRatingOverall.ToString("0.00"))</div><div class="label">Average rating</div></div>
+    <div class="stat-card"><div class="num">R @Model.TotalRevenue.ToString("N0")</div><div class="label">Revenue</div></div>
+</div>
+
+<h2 style="font-size:16px;margin-bottom:10px;">Tours per guide</h2>
+<table class="admin-table" style="margin-bottom:24px;">
+    <tr><th>Guide</th><th>Number of tours</th></tr>
+    @foreach (var row in Model.ToursPerGuide)
+    {
+<tr><td>@row.GuideName</td><td>@row.NumberOfTours</td></tr>}
+    @if (Model.ToursPerGuide.Count == 0)
+    {
+<tr><td colspan="2" style="color:var(--muted);text-align:center;">No data for this period.</td></tr>}
+</table>
+
+<h2 style="font-size:16px;margin-bottom:10px;">Average reviews per week</h2>
+<table class="admin-table" style="margin-bottom:24px;">
+    <tr><th>Week starting</th><th>Average rating</th><th>Number of reviews</th></tr>
+    @foreach (var row in Model.AvgReviewsPerWeek)
+    {
+<tr><td>@row.WeekStarting.ToString("dd MMM yyyy")</td><td>@row.AverageRating</td><td>@row.NumberOfReviews</td></tr>}
+    @if (Model.AvgReviewsPerWeek.Count == 0)
+    {
+<tr><td colspan="3" style="color:var(--muted);text-align:center;">No reviews in this period.</td></tr>}
+</table>
+
+<h2 style="font-size:16px;margin-bottom:10px;">Revenue per activity</h2>
+<table class="admin-table">
+    <tr><th>Activity</th><th>Bookings</th><th>Revenue</th></tr>
+    @foreach (var row in Model.RevenuePerActivity)
+    {
+<tr><td>@row.ActivityName</td><td>@row.NumberOfBookings</td><td>R @row.TotalRevenue.ToString("N2")</td></tr>}
+    @if (Model.RevenuePerActivity.Count == 0)
+    {
+<tr><td colspan="3" style="color:var(--muted);text-align:center;">No revenue in this period.</td></tr>}
+</table>
+
+<div style="text-align:right;margin-top:16px;">
+    <button class="export-btn" onclick="window.print();">Export to spreadsheet</button>
+</div>

@@ -1,0 +1,53 @@
+﻿@model SaraTourism.Models.Activity
+@{ ViewBag.Title = "Add activity";
+                ViewBag.CurrentNav = "activities"; }
+<h1>Add activity</h1>
+<div class="allocate-card" style="max-width:520px;">
+    @using (Html.BeginForm("Create", "Activity", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+@Html.AntiForgeryToken()
+                @Html.ValidationSummary(false, "", new { @class = "validation-summary-errors" })
+
+                                <div class="field">
+                                    <label>Activity photo</label>
+                                    <label class="upload-box" style="display:block;">
+                                        <div class="upload-icon">&#128247;</div>
+                                        <div class="upload-text">Click to upload a photo</div>
+                                        <div class="upload-hint">JPG or PNG, at least 800&times;500px</div>
+                                        <input type="file" name="photo" accept=".jpg,.jpeg,.png" />
+                                    </label>
+                                </div>
+                                                <div class="field">
+                                                    @Html.LabelFor(m => m.ActivityName)
+                                                    @Html.TextBoxFor(m => m.ActivityName, new { placeholder = "e.g. Mapungubwe sunset drive" })
+                                                    @Html.ValidationMessageFor(m => m.ActivityName)
+                                                </div>
+                                                                <div class="field">
+                                                                    @Html.LabelFor(m => m.Location)
+                                                                    @Html.TextBoxFor(m => m.Location, new { placeholder = "e.g. Mapungubwe National Park" })
+                                                                    @Html.ValidationMessageFor(m => m.Location)
+                                                                </div>
+                                                                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                                                                                    <div class="field">
+                                                                                        @Html.LabelFor(m => m.DurationMinutes, "Duration (minutes)")
+                                                                                        @Html.TextBoxFor(m => m.DurationMinutes, new { type = "number", placeholder = "180" })
+                                                                                        @Html.ValidationMessageFor(m => m.DurationMinutes)
+                                                                                    </div>
+                                                                                    <div class="field">
+                                                                                        @Html.LabelFor(m => m.PricePerPerson, "Price per person (R)")
+                                                                                        @Html.TextBoxFor(m => m.PricePerPerson, new { type = "number", step = "0.01", placeholder = "450" })
+                                                                                        @Html.ValidationMessageFor(m => m.PricePerPerson)
+                                                                                    </div>
+                                                                                </div>
+                                                                                                <div class="field">
+                                                                                                    @Html.LabelFor(m => m.MaxCapacity)
+                                                                                                    @Html.TextBoxFor(m => m.MaxCapacity, new { type = "number", placeholder = "15" })
+                                                                                                    @Html.ValidationMessageFor(m => m.MaxCapacity)
+                                                                                                </div>
+                                                                                                                <div class="field">
+                                                                                                                    @Html.LabelFor(m => m.Description)
+                                                                                                                    @Html.TextAreaFor(m => m.Description, new { rows = 3, placeholder = "Short description shown on the activity page" })
+                                                                                                                </div>
+                                                                                                                                <button type="submit" class="primary-btn">Save activity</button>}
+    <div style="margin-top:14px;"><a href="@Url.Action("Index")" style="color:var(--muted);font-size:13px;">&larr; Back to activities</a></div>
+</div>
